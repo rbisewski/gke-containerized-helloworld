@@ -1,0 +1,4 @@
+apiVersion: v2
+name: gke-simple-webserver
+version: 1.0.0.prod
+description: A sample deployment of a GKE webserver using helm.

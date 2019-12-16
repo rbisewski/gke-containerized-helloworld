@@ -1,0 +1,41 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: webapp
+  namespace: default
+  labels:
+      app: webapp
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: webapp
+    template:
+      metadata:
+          labels:
+              app: webapp
+      spec:
+        containers:
+        - name: webapp
+          image: gcr.io/test-project-1-262115/webserver:1.0.0.prod 
+          imagePullPolicy: Always
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          - containerPort: 3000
+            protocol: TCP
+          volumeMounts:
+          - mountPath: /app/database
+            name: webapp-claim0
+          livenessProbe:
+              httpGet:
+                path: /healthz
+                port: 8080
+                scheme: HTTP
+              initialDelaySeconds: 30
+              timeoutSeconds: 5
+        restartPolicy: Always
+        volumes:
+        - name: webapp-claim0
+          persistentVolumeClaim:
+            claimName: webapp-claim0
